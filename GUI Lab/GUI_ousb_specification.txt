@@ -1,0 +1,156 @@
+==================  GUI for Open-USB-IO Lab Exam  =====================================
+
+PURPOSE     This file defines the GUI for Open-USB-IO lab exam,  it is not a proforma
+            where you add code,  just a specification.
+            Note also the marking proforma used by the tutors to evaluate your work,
+            see the file GUI_marking_guide_2368.xls
+
+
+BACKGROUND: Most products require GUI programs both for legitimate operational
+            reasons and to help sales.  In this project you will be building a GUI
+            for the Open-USB-IO board.
+
+
+SPECIFIC REQUIREMENTS 
+
+  * The program must be written using Eclipse and Qt 4 Designer using the
+    lab test live-DVDs.
+
+  * The main GUI screen must clearly state your name and student ID.
+
+  * Marks will come from a pleasing layout on the screen and the number of
+    features you can implement from the list below.
+
+  * At the end of the lab exam you must copy the executable code,
+    most likely in something like-
+    /home/user/Documents then hit the submit button on the desk top.
+
+  * Features to consider implementing are listed below.  You are
+    not expected to implement every item.
+
+      - An "about" must describe in text what you have achieved.  This
+        will help the tutor find everything you have done.
+        Ideally this will be from the menu with hot key ctrl-A but
+        just a text box on the main screen is OK.
+        *** An achievement not listed in this box may not be marked.
+
+      - A timer must cause the status of Open-USB-IO to be read every
+        second and the display should be updated.
+
+      - The status of the 8 switches must be clear.
+
+      - It must be possible to see the value of the LEDs and write
+        to the LEDs.  Can you do this graphically with buttons?
+
+      - Display the status of the LDR and pot.  Ideally the display
+        will be graphical.
+
+      - Set PWM 1, 2 and 3.
+
+      - Display the analogue values on the 6 free analogue ports.
+
+      - Display a primitive chart recorder of the switches or
+        trim pot.  Consider a text box where each second a new
+        row of 1s and 0s from the switches is added at the first
+        line or appended at the bottom line.
+
+      - Features and ideas NOT in the qt demo programs will
+        rate more highly than those from the qt demo programs.
+
+
+
+HINTS
+
+  * The lectures will not have had time to work through the User Interface
+    Design  notes.  It would be well worth reading these yourself so
+    you have some idea what makes a good and bad interface.
+
+  * The live-DVD Eclipse example programs have most of the code you
+    will need and these examples will be on the lab test live-DVD.
+    Make sure you know where to get which bits of code.
+
+  * Do not modify an existing Qt GUI project, at least copy it so the
+    original code is left intact as a reference.
+      - In Eclipse ensure you have just one project open in the
+        Project Explorer.
+      - Right click on the project head and select copy, right
+        click again and select paste,  supply a meaningful name.
+      - Close the old working project, and start working on the
+        new one.
+
+  * Some students have reported the live-DVD crashes when compiling
+    with debugging on. To move between the debug and release modes
+    select the Eclipse menu option Project->Make Target, Build then
+    double click or Release or Debug.
+    You may need to add a space to the .cpp file and save to force
+    the build to recompile.
+
+  * The Open-USB-IO manual has many examples of useful commands that
+    your GUI can issue.
+
+  * You will need to practice this lab at home quite a lot to get
+    it right.
+
+  * Be very careful to save working versions of your code as the
+    lab exam proceeds so you are not left with a dud program
+    just as you must submit.
+    Another essential approach is to add only a few lines before
+    compiling and running.
+
+  * After the lab exam you will receive a filled in marking sheet
+    and your binary from the marking tutor (who will not be your
+    normal tutor).  If you wish to challenge the mark you must
+    email the tutor on their E number (e12345@ems.rmit.edu.au),
+    refer to a row in the marking spreadsheet,  and clearly state
+    why you think the mark is wrong.  It is very unlikely that
+    a mark upgrade such as 12/20 to 15/20 will be accepted because
+    the tutors will have marked to a consistent level for all
+    students and changing jsut one would thus be wrong.
+
+
+
+
+TUTOR MARKING INSTRUCTIONS
+
+  * Well before the lab exam organize with another lab tutor to swap
+    lab exams.
+    Send your student's files to this tutor immediately after the lab
+    session.
+    The marking tutor should mark ASAP and sent the result to 
+    directly to the students ASAP after the last lab session of the week.
+
+  * Note that the marking is in points not percent!
+    The conversion rate between points and marks % will be decided
+    by the lecturer after all GUI lab exams have been done.
+
+  * Tutors should use the live-DVD to mark the projects.
+
+  * To start marking first open a copy of the marking guide-
+      GUI_marking_guide_2368.xls
+    Run the student's program and get their name and student number,
+    cut and paste these into the marking guide and save under
+    the student's number,  use name format:  s1234567_lab2.xls
+
+  * Proceed to evaluate the student's program based on information in
+    the about box and your use of the student's program.
+    Take into account student's statements about whether
+    a feature fully works or has defects.  Be harsh on defects you
+    find that the student does not admit in the about information.
+    Always write something in the comments section even if it is brief.
+
+  * Note the "General Marking Guidelines" at the end of the lab guide.
+    Features that were not in the demo programs should rate more 
+    highly than those in the demo program.
+
+  * When finished save the mark guide for this student.
+    Add the mark to Blackboard.
+
+  * Send all marking guide documents to the students as soon as 
+    possible after the last lab session for this lab exam.
+    >>>> It is VITAL to do this as some students may have a 2nd
+         chance lab test the next day.
+
+  * Keep a copy of all student marks in case of disputes.
+    At the end of semester zip up all your marking results plus 
+    student code and send them to the lecturer.
+

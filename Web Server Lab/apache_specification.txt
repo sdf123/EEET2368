@@ -1,0 +1,258 @@
+==================  Apache Electrical Sub Station Lab Exam  =======================
+
+PURPOSE     This file defines the lab exam for Apache control of an Electrical
+            Sub-station lab.  It is not a proforma where you add code,
+            just a specification.
+            Note also the marking proforma used by the tutors to evaluate your work,
+            see the file Apache_marking_guide_2368.xls
+
+
+BACKGROUND: Small remote power sub-stations are difficult to inspect and control.
+            One solution is to instrument the sub-station with sensors and actuators
+            which are connected to a web server held within the substation.
+            A remote browser can then read the status of the sub-station and
+            do some control.
+
+            This lab presents a cut down version of a substation and simulates
+            the hardware control using the Open-USB-IO interface board.
+
+
+
+EQUIPMENT DESCRIPTION
+
+  * The substation is composed of two circuit breakers and one transformer
+    which are monitored and controlled by a web server via an Open-USB-IO
+    board.
+
+    Power                   \ /             Power
+    up_link ---->-----.------x-------->---- down_link
+                      |     / \  down_break
+                     \|/                .
+                      x  sub_break      .          .-----------.
+                     /|\         .   .---------.   |           |
+                      |          ....|         |   |  web      |  Internet link
+                  .---'----.         | Open-   +---+  server   +----------<>
+                  | trans- | ........| USB-IO  |   |  control  |
+                  | former |         |         |   |  system   |
+                  '---.----'         '---------'   |           |
+                      |                            '-----------'
+                      |
+                      v local_link
+
+
+  * The transformer has a temperature monitor where the raw reading is
+    between 0 and 1023,  which scales to between -20 deg C and 150 deg C.
+    The transformer should never go above 120 deg C.
+    This signal is available on the trim pot input of Open-USB-IO.
+
+  * Each circuit breaker has a status as connected or thrown.
+
+  * The circuit breakers are controlled by Open-USB_IO LEDs.
+      LED0 = 1 = down break thrown
+      LED1 = 1 = down break connected.
+      LED2 = 1 = sub break thrown
+      LED3 = 1 = sub break connected.
+
+    LED01 and LED23 combinations of 00 and 11 are illegal and
+    your program must ensure they are not allowed to exist. If
+    a breaker has a non-allowed state set the breaker to thrown.
+
+  * Switches are labelled S0 to S7 on the Open-USB-IO board.
+    Switch S7 on the Open-USB-IO simulates a short on the down_link.
+    S7 = on should force LED01 to be 10 and stay that way even
+         if a connect command is received.  If S7=off then the
+         breaker stays at thrown until a connect command is received.
+    Switch S6 on the Open-USB-IO simulates a short on the local_link.
+    S6 = on should force LED23 to be 10 and stay that way even
+         if a connect command is received.  If S6=off then the
+         breaker stays at thrown until a connect command is received.
+
+  * Circuit breakers can be set to thrown or connected (by LEDs 0-3)
+    from a web page on the server. Note a short on a line means that
+    a breaker must always stay in thrown state.
+
+
+
+SPECIFIC REQUIREMENTS 
+
+  * The program must be written using PHP and HTML and run in a virtual
+    server under Apache.  All this must be developed on the lab test
+    live-DVD ( it's the same as the live-DVD you have).
+
+  * The Apache web server must be a virtual server on IP 127.0.0.5,
+    this must be setup in the text file /etc/apache2/sites-enabled/exam_site
+
+  * The document root of your server must be /var/www/exam.
+    In that folder there must be a file called index.html that is an
+    introduction screen. This will contain your name and student number,
+    a brief description of the problem,  and a point form list of what your
+    web site has achieved.
+    There shall be a hyperlink to a file called exam.php in a subfolder
+    called examphp and this file will contain the bulk of your PHP and HTML.
+    (This structure will enable you to use the PHP debugger if you need to.)
+
+  * On your main page there must be a diagram of the substation system.
+    Note the images available on the live-DVD as one possibility, a circuit
+    style diagram is also a possibility.
+
+  * The tranformer temperature must be displayed and an visual alarm raised
+    if the temperature goes too high.
+
+  * The status of both breakers must be shown on the main page.
+    The page must allow manual setting of the breaker state.
+    Note the logic of the breaker status, LEDS and switches as
+    described above.
+
+  * If the switches 6 and 7 report a fault on the line the appropriate
+    circuit breaker must be moved to thrown state and the LEDs altered
+    to reflect this new state.
+
+  * Your code should not change the state of the LEDs unless 
+      - S6 or S7 indicate a fault, 
+      - or a manual command is given to change the LEDs.
+
+  * Your web page must self update every second.
+
+  * Your web page should have a pleasing user interface with good use
+    of colour,  images or drawings, and text.
+
+  * For submission copy your virtual server definition exam_site into
+    the /var/www/exam directory.
+    In Dolphin right click on the exam directory and select Compress Here.
+    Copy the exam.tar.gz file into /home/user/Documents.
+    Rename the file s1234567_exam.targ.gz and hit the submit button on
+    the desktop.
+
+  * Advanced challenge:  the problem as outlined does not require the
+    web page to remember past events.  All actions can be determined
+    from the status of page variables plus the current state of the
+    LEDs and switches on the Open-USB-IO board.
+    Use PHP sessions to display the last 4 temperature readings,
+    just as numbers.
+
+
+
+
+SPECIFIC HINTS
+
+  * The lectures may not have had time to work through the User Interface
+    Design  notes.  It would be well worth reading these yourself so
+    you have some idea what makes a good and bad interface.
+
+  * The live-DVD Apache examples will have much of then code you need
+    so look here to cut and paste useful code fragments.
+    Use the Linux multiple desktops wisely, have one with the editor
+    Kate which opens the demo web site files,  have another desktop
+    with Kate or Quanta Plus editing the files for this project.
+
+  * The virtual server configuration file can be made from modifiying
+    the demo configuration file already in /etc/apache2/sites-enabled/.
+    The root mode Dolphine file explorer should be used so you can
+    copy and change files owned by root.
+
+  * The Open-USB-IO manual has many examples of useful commands that
+    your PHP can issue to read and write the interfaces.
+
+  * You will need to practice this lab at home quite a lot to get
+    it right.
+
+  * You will need to take charge of PHP error reporting using the
+    PHP function error_reporting().  See the lecture notes for
+    how to move between development (release) and production mode.
+    Your delivered code should be set production.
+
+  * After the lab exam you will receive a filled in marking sheet
+    and your binary from the marking tutor (who will not be your
+    normal tutor).  If you wish to challenge the mark you must
+    email the tutor on their E number (e12345@ems.rmit.edu.au),
+    refer to a row in the marking spreadsheet,  and clearly state
+    why you think the mark is wrong.  It is very unlikely that
+    a mark upgrade such as 12/20 to 15/20 will be accepted because
+    the tutors will have marked to a consistent level for all
+    students and changing jsut one would thus be wrong.
+
+
+
+POSSIBLE EXAM QUESTIONS
+
+  * How is the main page updated every second?
+
+  * If you used the text diagram of the substation (above)
+    in a web page which characters would give you a problem?
+    What text format will make the characters align correctly?
+
+  * How can a web page keep it's record of the past?
+
+  * What action can the web server take if no client browser
+    is connected?
+    Does this make the control system here useless or make some
+    part of the functionality useless?
+    Could the web server and main page implement a control system
+    whereby the transformer temperature is sensed and a fan turned
+    on if the temperature goes too high?  If not then how could it
+    be implemented?
+
+  * What error reprting settings are used for production and
+    development?
+
+
+
+
+
+TUTOR MARKING INSTRUCTIONS
+
+  * The program is marked by a tutor after the lab session without the
+    student present.  Tutors should swap the files with another tutor
+    and not mark their own students.
+
+  * Note that the marking is in points not percent!
+    The conversion rate between points and marks % will be decided
+    by the lecturer after all GUI lab exams have been done.
+
+  * Tutors should use the live-DVD to mark the projects.  In this way
+    any wayward student code will not destroy your system.
+    You should save any marking sheets onto a USB stick as you go.
+
+  * To start marking first open a copy of the marking guide-
+      Apache_marking_guide_2368.xls
+    in one desktop.
+    Delete the directory /var/www/exam and the file 
+     /etc/apache2/sites-enabled/exam_site
+
+    Get the student's zip file and copy it into /var/www.
+    Right click on the file and select Extract Archive Here,
+      this will create the exam directory.
+
+    Copy the file exam_site from within /var/www/exam/ into the
+    directory /etc/apache2/sites-enabled (using a root enabled
+    Dolphin file explorer).
+
+  * In Firefox try looking at the URI 127.0.0.5
+    If this fails try 127.0.0.1/exam
+
+    Get the student's name and student number from the splash screen,
+    cut and paste these into the marking guide and save under
+    the student's number,  use name format:  s1234567_lab3.xls
+
+  * Do a right click on the hyperlink on the splash page and
+    open the main page in a new window.
+
+  * Proceed to evaluate the student's program based on information
+    in the splash page and the performance of the main page.
+    Take into account student's statements about whether
+    a feature fully works or has defects.  Be harsh on defects you
+    find that the student does not admit in the about information.
+    Always write something in the comments section even if it is brief.
+
+  * Note the "General Marking Guidelines" at the end of the lab guide.
+
+  * When finished save the mark guide for this student.
+    Add the mark to Blackboard.
+
+  * Send all marking guide documents to the students as soon as 
+    possible after the last lab session of the week.
+
+  * Keep a copy of all student marks in case of disputes.
+    At the end of semester zip up all your marking results plus
+    the students code and send them to the lecturer.
+
