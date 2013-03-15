@@ -78,7 +78,7 @@ SPECIFIC REQUIREMENTS
            was to be handled then your program would be started multiple
            times with different command line parameters.)
 
-         * The program will be started as follows-
+         * The program will be started from the command line as follows-
            ./your_code own_ip own_port control_name  control_port temp_limit ousb_LED
            where
                 own_ip   = IP address of this computer.
@@ -91,6 +91,7 @@ SPECIFIC REQUIREMENTS
                 ousb_LED   = LED number 0-7 to control on alarm panel.
 
            Example ./your_code 127.0.0.1 55555 127.0.0.2 44444 120 0
+           (If you are using Eclipse do not put ./your_code in the parameter list.)
 
          * The parameters can be assumed to all exist and have no errors.
            You do not need to check for errors.
@@ -278,6 +279,7 @@ GENERAL INFORMATION
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include "UDP_class.h"
 
 using namespace std;
 
@@ -287,18 +289,73 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {//--- When no command line parameters MUST print id string in CSV format.
-   if (argc == 1)  // no parameters.
-     { cout << "5432109B, s5432109@student.rmit.edu.au, Julian May"
-            << endl ;
-       return(0) ;
-     } 
+	   if (argc == 1)  // no parameters.
+	     { cout << "s3314308, s3314308@student.rmit.edu.au, Troy Dack" << endl ;
+	       return(0) ;
+	     }
 
+	   if (argc != 7)
+	   {
+		   cout << "Not enough parameters" << endl;
+		   return(0);
+	   }
 
- //--- START YOUR CODE HERE.
-   cout << "and the answer is ..." << endl ;  // NO !! Only output required text
-                                              // then endl.
+	   // Have enough parameters, get them all
+	   /*
+	                own_ip   = IP address of this computer.
+	                own_port = port number to listen on.
+	                   note the temperature sensor is setup to send to the above.
+	                control_name = IP of control room computer.
+	                control_port = port on control room computer.
+	                temp_limit = degrees C that temperature must not exceed.
+	                             If temperature goes above this then declare an alarm.
+	                ousb_LED   = LED number 0-7 to control on alarm panel.
 
-   return(0) ;
+	           Example ./your_code 127.0.0.1 55555 127.0.0.2 44444 120 0
+	    *
+	    */
+	   string own_ip = argv[1];
+	   int own_port = atoi(argv[2]);
+	   string control_ip = argv[3];
+	   int control_port = atoi(argv[4]);
+	   int temp_limit = atoi(argv[5]);
+	   int ousb_LED = atoi(argv[6]);
+
+	   // Turn off ousb_LED
+
+	   Tudp_handler rx_udp( own_ip, own_port) ;
+	   Tudp_handler tx_udp( control_ip, control_port) ;
+
+	   if (rx_udp.wait_receive_udp () )
+	     {//--- got an error
+	        cout << "   Send error: " << rx_udp.error_message << endl << endl ;
+	        return(-1) ;
+	     }
+
+	   string rxd = rx_udp.rcv_str;
+	   string sensor = rxd.substr(0,2);
+	   int temp = atoi(rxd.substr(3,3).c_str());
+	   cout << "RX" << endl;
+
+	   if (temp > temp_limit)
+	   {
+		   cout << "OVER" << endl;
+		   // Turn on ousb_LED
+
+		   // send UDP packet: "TEMP_ALARM " << sensor
+		   tx_udp.send_str = "TEMP_ALARM " + sensor;
+		   if ( tx_udp.send_udp() )
+		      {//--- got an error
+		         cout << "   Send error: " << tx_udp.error_message << endl ;
+		         return(-1) ;
+		      }
+	   }
+	   else if (temp <= temp_limit)
+	   {
+		   // Turn off ousb_LED
+	   }
+
+	   return(0);
 }
 
 

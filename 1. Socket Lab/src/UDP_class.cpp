@@ -31,6 +31,7 @@ int Tudp_handler::send_udp()
    error_message = "" ;
    struct sockaddr_in address ;
    int sock_descriptor ;
+   int address_size ;
 
  //--- create UDP socket.
    sock_descriptor = socket(AF_INET, SOCK_DGRAM, 0) ;
@@ -119,7 +120,6 @@ int Tudp_handler::uri_to_ip(string& uri, string& ip)
    char **pptr = server_host_name->h_addr_list ;
    inet_ntop( AF_INET, *pptr, str, sizeof(str)) ;
    ip = str ;
-   return(0) ;
 }
 
 
